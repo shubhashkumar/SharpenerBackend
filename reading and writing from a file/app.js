@@ -2,16 +2,28 @@ const http = require("http");
 const fs=require('fs');
 const { error } = require("console");
 const PORT = 3000;
-const server = http.createServer((req, res) => {
-  if (req.url === "/") {
+const server = http.createServer((req, res) =>
+{ 
+  if (req.url === "/" && req.method==="GET")
+   {
+    let userDetails = "";
+     fs.readFile("userDetails.txt", "utf8", (err, data) => 
+     {
+      
+      if (!err && data) {
+       userDetails = `${data}`
+      }
     res.setHeader("Content-Type", "text/html");
-    return res.end(`<form action="/submit" method="POST">
+    return res.end(`
+        ${userDetails}
+        <form action="/submit" method="POST">
         <label for="username">username:</label>
         <input type="text" id="username" name="username">
         <button type="submit">Send</button>
     </form>`);
-  }
- else if (req.url === "/submit" && req.method === "POST") 
+      });
+    }
+  else if (req.url === "/submit" && req.method === "POST") 
     {
     let body = [];
     req.on("data", (chunks) => {
@@ -32,7 +44,7 @@ const server = http.createServer((req, res) => {
           fs.writeFile('userDetails.txt', bodyString,(error)=>
         {
             res.writeHead(302,{'Location':'/'});
-            return res.end("Details saved!");
+            res.end();   
         });
          
     })
