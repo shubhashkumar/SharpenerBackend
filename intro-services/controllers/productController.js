@@ -15,7 +15,6 @@ const getProductById = (req, res) =>
 
 const postProducts = (req, res) => {
   const newProduct = productService.postProducts();
-  console.log(newProduct);
   res.status(201).send(newProduct);
 };
 
